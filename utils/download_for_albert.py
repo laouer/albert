@@ -77,8 +77,6 @@ def main(arguments):
     parser.add_argument('--data_dir', help='directory to save data to', type=str, default='glue_data')
     parser.add_argument('--tasks', help='tasks to download data for as a comma separated string',
                         type=str, default='all')
-    parser.add_argument('--path_to_mrpc', help='path to directory containing extracted MRPC data, msr_paraphrase_train.txt and msr_paraphrase_text.txt',
-                        type=str, default='')
     args = parser.parse_args(arguments)
 
     if not os.path.isdir(args.data_dir):
@@ -94,3 +92,5 @@ def main(arguments):
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv[1:]))
+
+    
