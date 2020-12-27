@@ -8,7 +8,7 @@ import zipfile
 import io
 import progressbar
 
-TASKS = ["CoLA", "SST", "MRPC", "QQP", "STS", "MNLI", "QNLI", "RTE", "WNLI", "diagnostic","Squadv2"]
+TASKS = ["CoLA", "SST", "MRPC", "QQP", "STS", "MNLI", "QNLI", "RTE", "WNLI", "diagnostic","SQUADV2"]
 TASK2PATH = {"CoLA":'https://dl.fbaipublicfiles.com/glue/data/CoLA.zip',
              "SST":'https://dl.fbaipublicfiles.com/glue/data/SST-2.zip',
              "QQP":'https://dl.fbaipublicfiles.com/glue/data/STS-B.zip',
