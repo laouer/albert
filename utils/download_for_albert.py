@@ -19,7 +19,7 @@ TASK2PATH = {"CoLA":'https://dl.fbaipublicfiles.com/glue/data/CoLA.zip',
              "WNLI":'https://dl.fbaipublicfiles.com/glue/data/WNLI.zip',
              "diagnostic":'https://dl.fbaipublicfiles.com/glue/data/AX.tsv',
              "MRPC":"https://drive.google.com/uc?export=download&id=1BXN9V6Lr47SZIAAxEfYnRkWu3WezJ0_F",
-             "Squadv2":"https://drive.google.com/uc?export=download&id=1CjyDXnysHL1oy27jZDIVx7QurWyfyXv9"}
+             "SQUADV2":"https://drive.google.com/uc?export=download&id=1CjyDXnysHL1oy27jZDIVx7QurWyfyXv9"}
 
 
 class ProgressDownload():
