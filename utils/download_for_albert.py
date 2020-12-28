@@ -8,7 +8,7 @@ import zipfile
 import io
 import progressbar
 
-TASKS = ["CoLA", "SST", "MRPC", "QQP", "STS", "MNLI", "QNLI", "RTE", "WNLI", "diagnostic","SQUADV2"]
+TASKS = ["CoLA", "SST", "MRPC", "QQP", "STS", "MNLI", "QNLI", "RTE", "WNLI", "diagnostic","SQUADV2","WIKIFR"]
 TASK2PATH = {"CoLA":'https://dl.fbaipublicfiles.com/glue/data/CoLA.zip',
              "SST":'https://dl.fbaipublicfiles.com/glue/data/SST-2.zip',
              "QQP":'https://dl.fbaipublicfiles.com/glue/data/STS-B.zip',
@@ -19,7 +19,8 @@ TASK2PATH = {"CoLA":'https://dl.fbaipublicfiles.com/glue/data/CoLA.zip',
              "WNLI":'https://dl.fbaipublicfiles.com/glue/data/WNLI.zip',
              "diagnostic":'https://dl.fbaipublicfiles.com/glue/data/AX.tsv',
              "MRPC":"https://drive.google.com/uc?export=download&id=1BXN9V6Lr47SZIAAxEfYnRkWu3WezJ0_F",
-             "SQUADV2":"https://drive.google.com/uc?export=download&id=19T2V6XnQVFHLMNQODKi_7gS_cosGgg0E"}
+             "SQUADV2":"https://drive.google.com/uc?export=download&id=19T2V6XnQVFHLMNQODKi_7gS_cosGgg0E",
+             "WIKIFR": "https://drive.google.com/uc?export=download&id=1S4J23nvkY6FtdkCO_E12l20e4oTrmTWt",}
 
 
 class ProgressDownload():
