@@ -148,7 +148,7 @@ We WILL train ALBERT model on config version 2 of base and large the Other confi
     "vocab_size": 30000
     }```
 
-### Create tfrecord for training data:
+### Create tfrecord for training data
 
 ```/bin/bash
 python create_pretraining_data.py \
