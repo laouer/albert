@@ -88,6 +88,14 @@ Once run, It will generate wikifr2M.model and wikifr2M.vocab files that will be 
 
 ## Pretraining
 
+### Get needed tools
+
+To run Albert finetuning, You will need tensorflow 1.5 and moreover you will need albert google code
+
+```bash
+git clone https://github.com/google-research/albert albert
+```
+
 ### Creating data for pretraining
 
 We WILL train ALBERT model on config version 2 of base and large the Other configurations in the folder [config](config/base/)
