@@ -2,25 +2,26 @@
 
 ## Introduction
 
-ALBERT is "A Lite" version of BERT, a popular unsupervised language representation learning algorithm. ALBERT uses parameter-reduction techniques that allow for large-scale configurations, overcome previous memory limitations, and achieve better behavior with respect to model degradation.
+ALBERT is the "A Lite" version of BERT, a popular unsupervised language representation learning algorithm. ALBERT uses parameter reduction techniques that allow for large-scale configurations, overcoming previous memory limitations and achieving better performance  model degradation behavior.
 
-For a technical detail description of the algorithm, see the paper:
+For a detailed technical description of the algorithm, see the article :
 
 [ALBERT: A Lite BERT for Self-supervised Learning of Language Representations](https://arxiv.org/abs/1909.11942) (Zhenzhong Lan, Mingda Chen, Sebastian Goodman, Kevin Gimpel, Piyush Sharma, Radu Soricut) and the official repository [Google ALBERT](https://github.com/google-research/ALBERT)
 
-Google researchers introduced three standout innovations with ALBERT. [1](https://medium.com/syncedreview/googles-albert-is-a-leaner-bert-achieves-sota-on-3-nlp-benchmarks-f64466dd583)
+Google researchers have introduced three significant innovations with ALBERT. [1](https://medium.com/syncedreview/googles-albert-is-a-leaner-bert-achieves-sota-on-3-nlp-benchmarks-f64466dd583)
 
-Factorized embedding parameterization: Researchers isolated the size of the hidden layers from the size of vocabulary embeddings by projecting one-hot vectors into a lower dimensional embedding space and then to the hidden space, which made it easier to increase the hidden layer size without significantly increasing the parameter size of the vocabulary embeddings.
+* Factorized integration parameterization: The researchers isolated the size of hidden layers from the size of vocabulary embedding by projecting one-hot vectors into a smaller embedding space and then into the hidden space. This made it easier to increase the size of hidden layers without significantly increasing the size of vocabulary embedding parameters.
 
-Cross-layer parameter sharing: Researchers chose to share all parameters across layers to prevent the parameters from growing along with the depth of the network. As a result, the large ALBERT model has about 18x fewer parameters compared to BERT-large.
+* Sharing of parameters between layers: The researchers chose to share all parameters between layers to prevent the parameters from increasing with the depth of the network. As a result, the large ALBERT model has about 18x fewer parameters than the large BERT model.
 
-Inter-sentence coherence loss: In the BERT paper, Google proposed a next-sentence prediction technique to improve the model’s performance in downstream tasks, but subsequent studies found this to be unreliable. Researchers used a sentence-order prediction (SOP) loss to model inter-sentence coherence in ALBERT, which enabled the new model to perform more robustly in multi-sentence encoding tasks.
+* Loss of consistency between sentences: In the BERT document, Google proposed a technique for predicting the next sentence to improve the performance of the model in downstream tasks, but subsequent studies showed that this technique was not reliable. The researchers used a loss of sentence order prediction (SOP) to model inter-sentence consistency in ALBERT, which allowed the new model to perform better in multi-sentence coding tasks.
+
 
 
 
 ## Data preparation
 
-To finetune Albert, we need to get the targetted corpus (her we detail the wikipedia data preparation)
+To finetune Albert, we need to get the targetted corpus (here we detail the wikipedia data preparation)
 
 * Download the French wikipedia corpus from [Wikipedia](https://dumps.wikimedia.org/)
 
