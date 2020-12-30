@@ -1,5 +1,5 @@
 FROM tensorflow/tensorflow:1.15.4
-RUN apt-get update -y && apt-get install -y git wget cmake
+RUN apt-get update -y && apt-get install -y git wget cmake bc gawk
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 RUN git clone https://github.com/google/sentencepiece.git && \ 
@@ -13,4 +13,4 @@ RUN git clone https://github.com/google/sentencepiece.git && \
         cd ../.. && rm -rf sentencepiece
 
 WORKDIR /mnt
-CMD ['/bin/bash']
+CMD ["/bin/bash"]

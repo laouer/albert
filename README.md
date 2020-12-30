@@ -27,6 +27,12 @@ To finetune Albert, we need to get the targetted corpus (here we detail the wiki
 * Training SentencePiece model for producing vocab file, I used 30000 words from this model on French wikipedia corpus. The SPM model was trained by [SentencePiece](https://github.com/google/sentencepiece)
   * To train spm vocab model You need to build&Install sentencePiece not only the python module
 
+* You can do it by your own or run the docker container from [Clone the repo for utils
+
+    ```bash
+    git clone https://github.com/laouer/albert-utils.git
+    ```
+  
 ### Preprocessing the wiki corpus dump
 
 First step is to get your corpus: I have choosen the wikipedia corpus as it globally clean and rich. <https://dumps.wikimedia.org/mirrors.html>
@@ -40,31 +46,30 @@ First step is to get your corpus: I have choosen the wikipedia corpus as it glob
 2. We need to extract and clean the corpus,. So after installing wikiextractor (see the above link for details), run the following command on the wikipedia dump:
 
     ```bash
-    python -m wikiextractor.WikiExtractor -o Output -b 100M \
+    python -m wikiextractor.WikiExtractor -o wikifr -b 2M \
          frwiki-20201220-pages-articles-multistream.xml.bz2
     ```
 
-   * It will generate something like 480 xml files
    * For training we will need just the text of articles, so running the next commandline Will :
-     * Concat all articles in one file
-     * keep only articles text removing the html tags
-     * Will keep lines that are longer than 5 words (really ampirical approach)
+     * keep only articles text and removing the html tags
+     * Will keep lines that are longer than 4 words (really ampirical approach)
      * NB: we keep empty lines to separate documents / paragraphs
 
     ```bash
-        awk '!/^<.*doc/ && (NF>=4 || NF==0)' $(find Output/ -type f) > wikip│anouar@corpus:~/sources/albert/working$ wc -l wikipedia_fr.txt 
+    gawk -i inplace '!/^<.*doc/ && (NF>=4 || NF==0)' $(find wikifr/ -type f)
     ```
-
-* We will get some 24,4 Million lines: it's huge!
 
 > Running this 2 steps , on my MacPro 16 (2020) with 6 core Intel i7, takes roughly 1h30
 
 ### Generate the spm vocal files
 
-Train the spm files (As said above, you need to Build&Install to get the spm_train command). You can look to the rich [options](https://github.com/google/sentencepiece/blob/master/doc/options.md) of spm_train. 
+Train the spm files (As said above, you need to Build&Install to get the spm_train command).
+
+You can look to the rich [options](https://github.com/google/sentencepiece/blob/master/doc/options.md) of spm_train for more controls.
 
 ```bash
-spm_train --input=wikipedia_fr.txt --model_prefix=wikifr2M\
+CORPUS_FILES=$(echo $(find wikifr/ -type f) | sed "s/ /,/g")
+spm_train --input=$CORPUS_FILES --model_prefix=wikifr2M\
           --vocab_size=30000 \
           --num_threads=12 --input_sentence_size=2000000 \
           --pad_id=0 --unk_id=1 --bos_id=-1 --eos_id=-1 \
@@ -97,13 +102,63 @@ Once run, It will generate wikifr2M.model and wikifr2M.vocab files that will be 
 
 ### Get needed tools
 
-To run Albert finetuning, You will need tensorflow 1.5 and moreover you will need albert google code
+To run Albert finetuning, You will need tensorflow 1.5 and moreover you will need albert google code ( Use the given [Dockerfile](docker/Dockerfile) )
 
 ```bash
 git clone https://github.com/google-research/albert albert
 ```
 
 ### Creating data for pretraining
+
+### Create tfrecord for training data
+
+Sharding the wikipedia corpus is a good idea as we are talking about 24M lines and we will stuck with memory limit.
+
+**NB:** The max_predictions_per_seq is the maximum number of masked LM predictions per sequence. It should be set to around max_seq_length * masked_lm_prob
+
+```bash
+VOCAB_MODEL_FILE="wikifr2M.vocab"
+SPM_MODEL_FILE="wikifr2M.model"
+DATA_INPUT_DIR="wikifr"
+DATA_FEATURES_DIR="wikifr_tf_records"
+
+max_seq_length=128
+masked_lm_prob=0.2
+max_predictions_per_seq=$(echo $masked_lm_prob*$max_seq_length | bc)
+max_predictions_per_seq=${max_predictions_per_seq%.*}
+
+# parallelize generation of tf_records
+for l_input in $(find $DATA_INPUT_DIR/ -type f)
+do
+    # Replace the input folder by the output one
+    l_output=$DATA_FEATURES_DIR"/"${l_input#$DATA_INPUT_DIR/}".tf_record"
+    
+    # Create the output folder
+    mkdir -p $(dirname $l_output)
+
+    # skip running if output exists
+    test -f $l_output || python -m albert.create_pretraining_data \
+                            --dupe_factor=10 \
+                            --max_seq_length=$max_seq_length \
+                            --max_predictions_per_seq=$max_predictions_per_seq \
+                            --masked_lm_prob=$masked_lm_prob \
+                            --vocab_file=$VOCAB_MODEL_FILE \
+                            --spm_model_file=$SPM_MODEL_FILE \
+                            --input_file="$l_input"    --output_file="$l_output" &
+
+    # sleep 30s 
+    while [ $(jobs -p | wc -l) -gt $(nproc) ]; 
+    do 
+        sleep 30; 
+    done
+
+done
+
+```
+
+Be Patient it could take a long time
+
+## Start finetuning
 
 We WILL train ALBERT model on config version 2 of base and large the Other configurations in the folder [config](config/base/)
 
@@ -154,24 +209,3 @@ We WILL train ALBERT model on config version 2 of base and large the Other confi
     "type_vocab_size": 2,
     "vocab_size": 30000
     }```
-
-### Create tfrecord for training data
-
-As we said above the wikipedia_fr.txt is huge and we have to handle this problem, unless we will stuck. 
-let's start by splitting the wikipedia_fr.txt to mini shards
-
-```bash 
-VOCAB_MODEL_FILE="wikifr2M.vocab"
-SPM_MODEL_FILE="wikifr2M.model"
-DATA_TASK_DIR="shard-wiki"
-mkdir -p $DATA_TASK_DIR
-split -d -l 1000000 "wikipedia_fr.txt" "$DATA_TASK_DIR/wikipedia_fr_shard"
-
-python -m albert.create_pretraining_data \
-    --dupe_factor=10 \
-    --vocab_file=$VOCAB_MODEL_FILE \
-    --spm_model_file=$SPM_MODEL_FILE \
-    --input_file="$DATA_TASK_DIR/wikipedia_fr_shard00" \
-    --output_file="$DATA_TASK_DIR/wikipedia_fr_shard00.tf_record" 
-```
-Be Patient it could take a long time
