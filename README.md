@@ -27,9 +27,9 @@ To finetune Albert, we need to get the targetted corpus (here we detail the wiki
 * Training SentencePiece model for producing vocab file, I used 30000 words from this model on French wikipedia corpus. The SPM model was trained by [SentencePiece](https://github.com/google/sentencepiece)
   * To train spm vocab model You need to build&Install sentencePiece not only the python module
 
-### The dump wiki corpus 
+### Preprocessing the wiki corpus dump
 
-First step is to get your corpus: I choosed the wikipedia corpus as it globally clean and rich. <https://dumps.wikimedia.org/mirrors.html>
+First step is to get your corpus: I have choosen the wikipedia corpus as it globally clean and rich. <https://dumps.wikimedia.org/mirrors.html>
 
 1. Get your the articles-multistream (from a suitable mirror) example:
 
@@ -48,14 +48,16 @@ First step is to get your corpus: I choosed the wikipedia corpus as it globally 
    * For training we will need just the text of articles, so running the next commandline Will :
      * Concat all articles in one file
      * keep only articles text removing the html tags
-     * Remove empty lines
      * Will keep lines that are longer than 5 words (really ampirical approach)
+     * NB: we keep empty lines to separate documents / paragraphs
 
     ```bash
-    find Output -type f -exec grep -v -e  "<doc" -e "</doc" -e '^$' {} \; | awk  'NF>=5' > wikipedia_fr.txt
+        awk '!/^<.*doc/ && (NF>=4 || NF==0)' $(find Output/ -type f) > wikip│anouar@corpus:~/sources/albert/working$ wc -l wikipedia_fr.txt 
     ```
-    
-  * We will get some 15,5 Million lines: it's huge!
+
+* We will get some 24,4 Million lines: it's huge!
+
+> Running this 2 steps , on my MacPro 16 (2020) with 6 core Intel i7, takes roughly 1h30
 
 ### Generate the spm vocal files
 
