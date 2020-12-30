@@ -12,4 +12,5 @@ RUN git clone https://github.com/google/sentencepiece.git && \
         ldconfig -v && \
         cd ../.. && rm -rf sentencepiece
 
+WORKDIR /mnt
 CMD ['/bin/bash']
