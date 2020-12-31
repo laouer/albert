@@ -156,7 +156,7 @@ done
 
 ```
 
-Be Patient it could take a long time
+> Be patient, it could take a long time to finish something like 13h on the same configuration as above.
 
 ### Start finetuning
 
