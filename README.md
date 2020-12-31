@@ -184,7 +184,8 @@ We WILL train ALBERT model on config version 2 of base and large the Other confi
     "down_scale_factor": 1,
     "type_vocab_size": 2,
     "vocab_size": 30000
-    }```
+    }
+    ```
 
 * Large Config
 
@@ -208,4 +209,5 @@ We WILL train ALBERT model on config version 2 of base and large the Other confi
     "down_scale_factor": 1,
     "type_vocab_size": 2,
     "vocab_size": 30000
-    }```
+    }
+    ```
