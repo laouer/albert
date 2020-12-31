@@ -109,8 +109,6 @@ To run Albert finetuning, You will need tensorflow 1.5 and moreover you will nee
 git clone https://github.com/google-research/albert albert
 ```
 
-### Creating data for pretraining
-
 ### Create tfrecord for training data
 
 Sharding the wikipedia corpus is a good idea as we are talking about 24M lines and we will stuck with memory limit.
