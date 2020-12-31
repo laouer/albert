@@ -2,3 +2,4 @@ sentencepiece
 tensorflow_hub 
 six==1.14.0 
 wikiextractor
+gsutils

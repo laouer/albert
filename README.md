@@ -46,7 +46,8 @@ First step is to get your corpus: I have choosen the wikipedia corpus as it glob
 2. We need to extract and clean the corpus,. So after installing wikiextractor (see the above link for details), run the following command on the wikipedia dump:
 
     ```bash
-    python -m wikiextractor.WikiExtractor -o wikifr -b 2M \
+    CORPUS="wikifr"
+    python -m wikiextractor.WikiExtractor -o $CORPUS -b 2M \
          frwiki-20201220-pages-articles-multistream.xml.bz2
     ```
 
@@ -56,7 +57,7 @@ First step is to get your corpus: I have choosen the wikipedia corpus as it glob
      * NB: we keep empty lines to separate documents / paragraphs
 
     ```bash
-    gawk -i inplace '!/^<.*doc/ && (NF>=4 || NF==0)' $(find wikifr/ -type f)
+    gawk -i inplace '!/^<.*doc/ && (NF>=4 || NF==0)' $(find $CORPUS/ -type f)
     ```
 
 > Running this 2 steps , on my MacPro 16 (2020) with 6 core Intel i7, takes roughly 1h30
@@ -68,8 +69,8 @@ Train the spm files (As said above, you need to Build&Install to get the spm_tra
 You can look to the rich [options](https://github.com/google/sentencepiece/blob/master/doc/options.md) of spm_train for more controls.
 
 ```bash
-CORPUS_FILES=$(echo $(find wikifr/ -type f) | sed "s/ /,/g")
-spm_train --input=$CORPUS_FILES --model_prefix=wikifr2M\
+CORPUS_FILES=$(echo $(find ${CORPUS}/ -type f) | sed "s/ /,/g")
+spm_train --input=${CORPUS_FILES} --model_prefix=${CORPUS}"2M"\
           --vocab_size=30000 \
           --num_threads=12 --input_sentence_size=2000000 \
           --pad_id=0 --unk_id=1 --bos_id=-1 --eos_id=-1 \
@@ -117,10 +118,10 @@ Sharding the wikipedia corpus is a good idea as we are talking about 24M lines a
 **NB:** The max_predictions_per_seq is the maximum number of masked LM predictions per sequence. It should be set to around max_seq_length * masked_lm_prob
 
 ```bash
-VOCAB_MODEL_FILE="wikifr2M.vocab"
-SPM_MODEL_FILE="wikifr2M.model"
-DATA_INPUT_DIR="wikifr"
-DATA_FEATURES_DIR="wikifr_tf_records"
+VOCAB_MODEL_FILE=${CORPUS}"2M.vocab"
+SPM_MODEL_FILE=${CORPUS}"2M.model"
+DATA_INPUT_DIR=${CORPUS}
+DATA_FEATURES_DIR=${CORPUS}"_tf_records"
 
 max_seq_length=128
 masked_lm_prob=0.2
@@ -144,9 +145,10 @@ do
                             --masked_lm_prob=$masked_lm_prob \
                             --vocab_file=$VOCAB_MODEL_FILE \
                             --spm_model_file=$SPM_MODEL_FILE \
-                            --input_file="$l_input"    --output_file="$l_output" &
+                            --input_file=$l_input \
+                            --output_file=$l_output &
 
-    # sleep 30s 
+    # sleep 30s when all jobs launched
     while [ $(jobs -p | wc -l) -gt $(nproc) ]; 
     do 
         sleep 30; 
