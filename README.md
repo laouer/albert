@@ -158,9 +158,21 @@ done
 
 > Be patient, it could take a long time to finish something like 13h on the same configuration as above.
 
+### uploading to bucket
+
+If you are using the given docker, you could mount a google bucket as a drive using:
+
+```bash
+GOOGLE_APPLICATION_CREDENTIALS=google-key.json gcsfuse bucket-name /path/to/drive/
+```
+
+You may take a look to GoogleCloudPlatform github docs [installation](https://github.com/GoogleCloudPlatform/gcsfuse/blob/master/docs/installing.md) and [mounting](https://github.com/GoogleCloudPlatform/gcsfuse/blob/master/docs/mounting.md)
+
+> don't forget to mount your container with `--privileged`
+
 ### Start finetuning
 
-We WILL train ALBERT model on config version 2 of base and large the Other configurations in the folder [config](config/base/)
+We will train ALBERT model on config version 2 of base and large the Other configurations in the folder [config](config/base/)
 
 * Base Config
 

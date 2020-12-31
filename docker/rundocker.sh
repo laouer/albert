@@ -1,3 +1,3 @@
 #!/bin/bash
 docker build . -t albert-fr
-docker run -it --rm -v $PWD:/mnt albert-fr bash
+docker run -it --privileged -v $PWD:/mnt albert-fr bash
