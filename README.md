@@ -16,15 +16,15 @@ Google researchers have introduced three significant innovations with ALBERT. [1
 
 * Loss of consistency between sentences: In the BERT document, Google proposed a technique for predicting the next sentence to improve the performance of the model in downstream tasks, but subsequent studies showed that this technique was not reliable. The researchers used a loss of sentence order prediction (SOP) to model inter-sentence consistency in ALBERT, which allowed the new model to perform better in multi-sentence coding tasks.
 
+## Data preparation
+
 > I provide in this github a [Dockerfile](docker/Dockerfile) with all needed tools:
 
 ```bash
 git clone https://github.com/laouer/albert-utils.git
 ```
 
-## Data preparation
-
-To finetune Albert, we need to obtain the targeted corpus (we detail here the preparation of the wikipedia data)
+To finetune Albert, we need to obtain the targeted corpus (we detail here the processing of the wikipedia data)
 
 * Download the French corpus of [Wikipedia](https://dumps.wikimedia.org/)
 
@@ -111,7 +111,7 @@ git clone https://github.com/google-research/albert albert
 
 ### Create tfrecord for training data
 
-Sharding the wikipedia corpus is a good idea as we are talking about 24M lines and we will stuck with memory limit.
+Sharding the wikipedia corpus is a good idea as we are talking about 24M lines otherwise we will stuck with memory limit.
 
 **NB:** The max_predictions_per_seq is the maximum number of masked LM predictions per sequence. It should be set to around max_seq_length * masked_lm_prob
 
@@ -158,7 +158,7 @@ done
 
 Be Patient it could take a long time
 
-## Start finetuning
+### Start finetuning
 
 We WILL train ALBERT model on config version 2 of base and large the Other configurations in the folder [config](config/base/)
 
