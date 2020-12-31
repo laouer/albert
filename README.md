@@ -16,22 +16,22 @@ Google researchers have introduced three significant innovations with ALBERT. [1
 
 * Loss of consistency between sentences: In the BERT document, Google proposed a technique for predicting the next sentence to improve the performance of the model in downstream tasks, but subsequent studies showed that this technique was not reliable. The researchers used a loss of sentence order prediction (SOP) to model inter-sentence consistency in ALBERT, which allowed the new model to perform better in multi-sentence coding tasks.
 
+> I provide in this github a [Dockerfile](docker/Dockerfile) with all needed tools:
+
+```bash
+git clone https://github.com/laouer/albert-utils.git
+```
+
 ## Data preparation
 
-To finetune Albert, we need to get the targetted corpus (here we detail the wikipedia data preparation)
+To finetune Albert, we need to obtain the targeted corpus (we detail here the preparation of the wikipedia data)
 
-* Download the French wikipedia corpus from [Wikipedia](https://dumps.wikimedia.org/)
+* Download the French corpus of [Wikipedia](https://dumps.wikimedia.org/)
 
-* Data is preprocessed and extracted using [WikiExtractor](https://github.com/attardi/wikiextractor)
+* Pre-process The data by extracting it from the dump using [WikiExtractor](https://github.com/attardi/wikiextractor)
 
-* Training SentencePiece model for producing vocab file, I used 30000 words from this model on French wikipedia corpus. The SPM model was trained by [SentencePiece](https://github.com/google/sentencepiece)
-  * To train spm vocab model You need to build&Install sentencePiece not only the python module
-
-* You can do it by your own or run the docker container from [Clone the repo for utils
-
-    ```bash
-    git clone https://github.com/laouer/albert-utils.git
-    ```
+* Train SentencePiece model to produce vocab file and model file, I used 30000 words from this model on French wikipedia corpus. The SPM model was trained by [SentencePiece](https://github.com/google/sentencepiece)
+  * To train spm vocab model You need to build&Install sentencePiece not only install the python module
   
 ### Preprocessing the wiki corpus dump
 
@@ -60,7 +60,7 @@ First step is to get your corpus: I have choosen the wikipedia corpus as it glob
     gawk -i inplace '!/^<.*doc/ && (NF>=4 || NF==0)' $(find $CORPUS/ -type f)
     ```
 
-> Running this 2 steps , on my MacPro 16 (2020) with 6 core Intel i7, takes roughly 1h30
+> Running this 2 steps , on my MacPro 16 (2020) with 6 core Intel i7, takes roughly 2h
 
 ### Generate the spm vocal files
 
