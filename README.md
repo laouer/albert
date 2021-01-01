@@ -158,7 +158,7 @@ done
 
 > Be patient, it could take a long time to finish something like 13h on the same configuration as above.
 
-### uploading to bucket
+### Uploading TF_record to bucket
 
 If you are using the given docker, you could mount a google bucket as a drive using:
 
