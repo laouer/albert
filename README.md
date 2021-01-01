@@ -87,14 +87,14 @@ Once run, It will generate wikifr2M.model and wikifr2M.vocab files that will be 
     [CLS]	0
     [SEP]	0
     [MASK]	0
-    (	    0
-    )	    0
+    (       0
+    )       0
     -       0
-    £	    0
-    $	    0
-    €	    0
-    ▁	   -2.94116
-    ▁de	   -3.13249
+    £       0
+    $       0
+    €       0
+    ▁      -2.94116
+    ▁de    -3.13249
     ...
 
     ```
