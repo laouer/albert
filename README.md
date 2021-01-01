@@ -164,6 +164,9 @@ If you are using the given docker, you could mount a google bucket as a drive us
 
 ```bash
 GOOGLE_APPLICATION_CREDENTIALS=google-key.json gcsfuse bucket-name /path/to/drive/
+
+#this function is billed 
+gsutil -m cp wikifr_tf_record /path/to/drive/
 ```
 
 You may take a look to GoogleCloudPlatform github docs [installation](https://github.com/GoogleCloudPlatform/gcsfuse/blob/master/docs/installing.md) and [mounting](https://github.com/GoogleCloudPlatform/gcsfuse/blob/master/docs/mounting.md)
